@@ -1,0 +1,9 @@
+<div class="message-list" #messageListContainer>
+  @if (messages().length === 0) {
+    <p>Aucun message, commencez une conversation !</p>
+  } @else {
+    @for (message of messages(); track message.id) {
+      <app-message-item [message]="message"></app-message-item>
+    }
+  }
+</div>

@@ -1,0 +1,6 @@
+<div class="message-item" [class.user]="message().role === 'user'" [class.assistant]="message().role === 'assistant'">
+  <div class="message-content">
+    <p>{{ message().text }}</p>
+    <span class="timestamp">{{ message().timestamp | date:'short' }}</span>
+  </div>
+</div>

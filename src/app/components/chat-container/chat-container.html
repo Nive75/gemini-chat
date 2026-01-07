@@ -1,0 +1,59 @@
+<div class="chat-container">
+  <header class="chat-header">
+    <h1>Gemini Chat</h1>
+    <div class="header-actions">
+      <button type="button" class="btn btn-primary" (click)="newChat()">Nouveau Chat</button>
+      <button type="button" class="btn btn-secondary" (click)="toggleHistory()">
+        {{ showHistory() ? 'Masquer' : 'Historique' }}
+      </button>
+    </div>
+  </header>
+
+  @if (showHistory()) {
+    <aside class="history-sidebar">
+      <h2>Conversations</h2>
+      @if (conversations().length === 0) {
+        <p class="empty-history">Aucune conversation</p>
+      } @else {
+        <ul class="conversation-list">
+          @for (conversation of conversations(); track conversation.id) {
+            <li 
+              class="conversation-item"
+              [class.active]="storageService.currentConversationId() === conversation.id"
+              (click)="loadConversation(conversation.id)">
+              <div class="conversation-content">
+                <h3>{{ conversation.title }}</h3>
+                <span class="conversation-date">{{ conversation.updatedAt | date:'short' }}</span>
+              </div>
+              <button 
+                type="button" 
+                class="btn-delete"
+                (click)="deleteConversation(conversation.id, $event)">
+                ×
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </aside>
+  }
+
+  <main class="chat-main">
+    @if (isLoading()) {
+      <div class="loader">
+        <div class="spinner"></div>
+        <p>Chargement...</p>
+      </div>
+    }
+    
+    @if (error()) {
+      <div class="error-message">
+        <p>{{ error() }}</p>
+        <button type="button" (click)="error.set(null)">Fermer</button>
+      </div>
+    }
+    
+    <app-message-list [messages]="messages()"></app-message-list>
+    <app-message-input (sendMessage)="onSendMessage($event)"></app-message-input>
+  </main>
+</div>
